@@ -66,29 +66,7 @@ tokens {
 
 //-------------------------------------------------------------------------------------------------
 
-@header {/*
- * Copyright (c) 2018, 2020, Oracle and/or its affiliates. All rights reserved.
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License, version 2.0,
- * as published by the Free Software Foundation.
- *
- * This program is also distributed with certain software (including
- * but not limited to OpenSSL) that is licensed under separate terms, as
- * designated in a particular file or component or in included license
- * documentation. The authors of MySQL hereby grant you an additional
- * permission to link the program and your derivative works with the
- * separately licensed software that they have included with MySQL.
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See
- * the GNU General Public License, version 2.0, for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software Foundation, Inc.,
- * 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
-*/
-}
+@header {}
 
 //-------------------------------------------------------------------------------------------------
 
@@ -122,7 +100,7 @@ BITWISE_AND_OPERATOR: '&';
 BITWISE_XOR_OPERATOR: '^';
 
 LOGICAL_OR_OPERATOR:
-    '||' { setType(isSqlModeActive(PipesAsConcat) ? CONCAT_PIPES_SYMBOL : LOGICAL_OR_OPERATOR); }
+    '||' { setType(CONCAT_PIPES_SYMBOL if isSqlModeActive(PipesAsConcat) else LOGICAL_OR_OPERATOR) }
 ;
 BITWISE_OR_OPERATOR: '|';
 
@@ -589,7 +567,7 @@ MAX_QUERIES_PER_HOUR_SYMBOL:     M A X '_' Q U E R I E S '_' P E R '_' H O U R;
 MAX_ROWS_SYMBOL:                 M A X '_' R O W S;
 MAX_SIZE_SYMBOL:                 M A X '_' S I Z E;
 MAX_STATEMENT_TIME_SYMBOL:
-    M A X '_' S T A T E M E N T '_' T I M E                                  {50704 < serverVersion && serverVersion < 50708}?
+    M A X '_' S T A T E M E N T '_' T I M E                                  {50704 < serverVersion and serverVersion < 50708}?
 ;
 MAX_SYMBOL:                      M A X                                       { setType(determineFunction(MAX_SYMBOL)); }; // SQL-2003-N
 MAX_UPDATES_PER_HOUR_SYMBOL:     M A X '_' U P D A T E S '_' P E R '_' H O U R;
@@ -635,9 +613,9 @@ NEW_SYMBOL:                      N E W;                                      // 
 NEXT_SYMBOL:                     N E X T;                                    // SQL-2003-N
 NODEGROUP_SYMBOL:                N O D E G R O U P;
 NONE_SYMBOL:                     N O N E;                                    // SQL-2003-R
-NONBLOCKING_SYMBOL:              N O N B L O C K I N G                       {50700 < serverVersion && serverVersion < 50706}?;
+NONBLOCKING_SYMBOL:              N O N B L O C K I N G                       {50700 < serverVersion and serverVersion < 50706}?;
 NOT_SYMBOL:
-    N O T                                                                    { setType(isSqlModeActive(HighNotPrecedence) ? NOT2_SYMBOL: NOT_SYMBOL); }
+    N O T                                                                    { setType(NOT2_SYMBOL if isSqlModeActive(HighNotPrecedence) else  NOT_SYMBOL) }
 ;                                                                            // SQL-2003-R
 NOW_SYMBOL:                      N O W                                       { setType(determineFunction(NOW_SYMBOL)); };
 NO_SYMBOL:                       N O;                                        // SQL-2003-R
@@ -961,7 +939,7 @@ GROUPING_SYMBOL:                 G R O U P I N G                             {se
 PERSIST_ONLY_SYMBOL:             P E R S I S T '_' O N L Y                   {serverVersion >= 80000}?; // MYSQL
 HISTOGRAM_SYMBOL:                H I S T O G R A M                           {serverVersion >= 80000}?; // MYSQL
 BUCKETS_SYMBOL:                  B U C K E T S                               {serverVersion >= 80000}?; // MYSQL
-REMOTE_SYMBOL:                   R E M O T E                                 {serverVersion >= 80003 && serverVersion < 80014}?; // MYSQL
+REMOTE_SYMBOL:                   R E M O T E                                 {serverVersion >= 80003 and serverVersion < 80014}?; // MYSQL
 CLONE_SYMBOL:                    C L O N E                                   {serverVersion >= 80000}?; // MYSQL
 CUME_DIST_SYMBOL:                C U M E '_' D I S T                         {serverVersion >= 80000}?; // SQL-2003-R
 DENSE_RANK_SYMBOL:               D E N S E '_' R A N K                       {serverVersion >= 80000}?; // SQL-2003-R
@@ -1111,15 +1089,18 @@ fragment BACK_TICK:    '`';
 fragment SINGLE_QUOTE: '\'';
 fragment DOUBLE_QUOTE: '"';
 
-BACK_TICK_QUOTED_ID: BACK_TICK (({!isSqlModeActive(NoBackslashEscapes)}? '\\')? .)*? BACK_TICK;
+// TODO check syntax
+BACK_TICK_QUOTED_ID: BACK_TICK (({not isSqlModeActive(NoBackslashEscapes)}? '\\')? .)*? BACK_TICK;
 
+// TODO check syntax
 DOUBLE_QUOTED_TEXT: (
-        DOUBLE_QUOTE (({!isSqlModeActive(NoBackslashEscapes)}? '\\' .)? .)*? DOUBLE_QUOTE
+        DOUBLE_QUOTE (({not isSqlModeActive(NoBackslashEscapes)}? '\\' .)? .)*? DOUBLE_QUOTE
     )+
 ;
 
+// TODO check syntax
 SINGLE_QUOTED_TEXT: (
-        SINGLE_QUOTE (({!isSqlModeActive(NoBackslashEscapes)}? '\\')? .)*? SINGLE_QUOTE
+        SINGLE_QUOTE (({not isSqlModeActive(NoBackslashEscapes)}? '\\')? .)*? SINGLE_QUOTE
     )+
 ;
 
