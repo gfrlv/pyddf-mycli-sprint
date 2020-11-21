@@ -11,6 +11,6 @@ alias grun='java org.antlr.v4.gui.TestRig'
 
 Generating the parser:
 ```
-cd grammars
+cd grammar
 antlr4 -Dlanguage=Python3 MySQLLexer.g4  MySQLParser.g4
 ```
