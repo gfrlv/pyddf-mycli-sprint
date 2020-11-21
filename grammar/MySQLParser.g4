@@ -473,7 +473,7 @@ createFunction:
 ;
 
 createUdf:
-    AGGREGATE_SYMBOL? FUNCTION_SYMBOL udfName RETURNS_SYMBOL type = (
+    AGGREGATE_SYMBOL? FUNCTION_SYMBOL udfName RETURNS_SYMBOL type_expression = (
         STRING_SYMBOL
         | INT_SYMBOL
         | REAL_SYMBOL
@@ -505,12 +505,12 @@ routineOption:
 
 createIndex:
     onlineOption? (
-        UNIQUE_SYMBOL? type = INDEX_SYMBOL (
+        UNIQUE_SYMBOL? type_expression = INDEX_SYMBOL (
             {serverVersion >= 80014}? indexName indexTypeClause?
             | indexNameAndType?
         ) createIndexTarget indexOption*
-        | type = FULLTEXT_SYMBOL INDEX_SYMBOL indexName createIndexTarget fulltextIndexOption*
-        | type = SPATIAL_SYMBOL INDEX_SYMBOL indexName createIndexTarget spatialIndexOption*
+        | type_expression = FULLTEXT_SYMBOL INDEX_SYMBOL indexName createIndexTarget fulltextIndexOption*
+        | type_expression = SPATIAL_SYMBOL INDEX_SYMBOL indexName createIndexTarget spatialIndexOption*
     ) indexLockAndAlgorithm?
 ;
 
@@ -522,14 +522,14 @@ createIndex:
   The problem is that whereas USING is a reserved word, TYPE is not. We can
   still handle it if an index name is supplied, i.e.:
 
-    ... INDEX type TYPE <index_type> ...
+    ... INDEX type_expression TYPE <index_type> ...
 
-  here the index's name is unmbiguously 'type', but for this:
+  here the index's name is unmbiguously 'type_expression', but for this:
 
     ... INDEX TYPE <index_type> ...
 
-  it's impossible to know what this actually mean - is 'type' the name or the
-  type? For this reason we accept the TYPE syntax only if a name is supplied.
+  it's impossible to know what this actually mean - is 'type_expression' the name or the
+  type_expression? For this reason we accept the TYPE syntax only if a name is supplied.
 */
 indexNameAndType:
     indexName (USING_SYMBOL indexType)?
@@ -754,7 +754,7 @@ dropProcedure:
 ;
 
 dropIndex:
-    onlineOption? type = INDEX_SYMBOL indexRef ON_SYMBOL tableRef indexLockAndAlgorithm?
+    onlineOption? type_expression = INDEX_SYMBOL indexRef ON_SYMBOL tableRef indexLockAndAlgorithm?
 ;
 
 dropLogfileGroup:
@@ -773,7 +773,7 @@ dropServer:
 ;
 
 dropTable:
-    TEMPORARY_SYMBOL? type = (TABLE_SYMBOL | TABLES_SYMBOL) ifExists? tableRefList (
+    TEMPORARY_SYMBOL? type_expression = (TABLE_SYMBOL | TABLES_SYMBOL) ifExists? tableRefList (
         RESTRICT_SYMBOL
         | CASCADE_SYMBOL
     )?
@@ -1297,12 +1297,12 @@ naturalJoinType:
 ;
 
 innerJoinType:
-    type = (INNER_SYMBOL | CROSS_SYMBOL)? JOIN_SYMBOL
-    | type = STRAIGHT_JOIN_SYMBOL
+    type_expression = (INNER_SYMBOL | CROSS_SYMBOL)? JOIN_SYMBOL
+    | type_expression = STRAIGHT_JOIN_SYMBOL
 ;
 
 outerJoinType:
-    type = (LEFT_SYMBOL | RIGHT_SYMBOL) OUTER_SYMBOL? JOIN_SYMBOL
+    type_expression = (LEFT_SYMBOL | RIGHT_SYMBOL) OUTER_SYMBOL? JOIN_SYMBOL
 ;
 
 /**
@@ -1684,9 +1684,9 @@ groupReplication:
 //----------------------------------------------------------------------------------------------------------------------
 
 preparedStatement:
-    type = PREPARE_SYMBOL identifier FROM_SYMBOL (textLiteral | userVariable)
+    type_expression = PREPARE_SYMBOL identifier FROM_SYMBOL (textLiteral | userVariable)
     | executeStatement
-    | type = (DEALLOCATE_SYMBOL | DROP_SYMBOL) PREPARE_SYMBOL identifier
+    | type_expression = (DEALLOCATE_SYMBOL | DROP_SYMBOL) PREPARE_SYMBOL identifier
 ;
 
 executeStatement:
@@ -1907,11 +1907,11 @@ roleOrPrivilege:
     | GRANT_SYMBOL OPTION_SYMBOL
     | SHOW_SYMBOL DATABASES_SYMBOL
     | CREATE_SYMBOL (
-        TEMPORARY_SYMBOL object = TABLES_SYMBOL
-        | object = (ROUTINE_SYMBOL | TABLESPACE_SYMBOL | USER_SYMBOL | VIEW_SYMBOL)
+        TEMPORARY_SYMBOL db_object = TABLES_SYMBOL
+        | db_object = (ROUTINE_SYMBOL | TABLESPACE_SYMBOL | USER_SYMBOL | VIEW_SYMBOL)
     )?
     | LOCK_SYMBOL TABLES_SYMBOL
-    | REPLICATION_SYMBOL object = (CLIENT_SYMBOL | SLAVE_SYMBOL)
+    | REPLICATION_SYMBOL db_object = (CLIENT_SYMBOL | SLAVE_SYMBOL)
     | SHOW_SYMBOL VIEW_SYMBOL
     | ALTER_SYMBOL ROUTINE_SYMBOL?
     | {serverVersion > 80000}? (CREATE_SYMBOL | DROP_SYMBOL) ROLE_SYMBOL
@@ -1960,16 +1960,16 @@ role:
 //----------------------------------------------------------------------------------------------------------------------
 
 tableAdministrationStatement:
-    type = ANALYZE_SYMBOL noWriteToBinLog? TABLE_SYMBOL tableRefList (
+    type_expression = ANALYZE_SYMBOL noWriteToBinLog? TABLE_SYMBOL tableRefList (
         {serverVersion >= 80000}? histogram
     )?
-    | type = CHECK_SYMBOL TABLE_SYMBOL tableRefList checkOption*
-    | type = CHECKSUM_SYMBOL TABLE_SYMBOL tableRefList (
+    | type_expression = CHECK_SYMBOL TABLE_SYMBOL tableRefList checkOption*
+    | type_expression = CHECKSUM_SYMBOL TABLE_SYMBOL tableRefList (
         QUICK_SYMBOL
         | EXTENDED_SYMBOL
     )?
-    | type = OPTIMIZE_SYMBOL noWriteToBinLog? TABLE_SYMBOL tableRefList
-    | type = REPAIR_SYMBOL noWriteToBinLog? TABLE_SYMBOL tableRefList repairType*
+    | type_expression = OPTIMIZE_SYMBOL noWriteToBinLog? TABLE_SYMBOL tableRefList
+    | type_expression = REPAIR_SYMBOL noWriteToBinLog? TABLE_SYMBOL tableRefList repairType*
 ;
 
 histogram:
@@ -1994,10 +1994,10 @@ repairType:
 
 installUninstallStatment:
     // COMPONENT_SYMBOL is conditionally set in the lexer.
-    action = INSTALL_SYMBOL type = PLUGIN_SYMBOL identifier SONAME_SYMBOL textStringLiteral
-    | action = INSTALL_SYMBOL type = COMPONENT_SYMBOL textStringLiteralList
-    | action = UNINSTALL_SYMBOL type = PLUGIN_SYMBOL pluginRef
-    | action = UNINSTALL_SYMBOL type = COMPONENT_SYMBOL componentRef (
+    action = INSTALL_SYMBOL type_expression = PLUGIN_SYMBOL identifier SONAME_SYMBOL textStringLiteral
+    | action = INSTALL_SYMBOL type_expression = COMPONENT_SYMBOL textStringLiteralList
+    | action = UNINSTALL_SYMBOL type_expression = PLUGIN_SYMBOL pluginRef
+    | action = UNINSTALL_SYMBOL type_expression = COMPONENT_SYMBOL componentRef (
         COMMA_SYMBOL componentRef
     )*
 ;
@@ -2127,14 +2127,14 @@ showStatement:
         | value = GRANTS_SYMBOL FOR_SYMBOL user USING_SYMBOL userList
         | value = MASTER_SYMBOL STATUS_SYMBOL
         | value = CREATE_SYMBOL (
-            object = DATABASE_SYMBOL ifNotExists? schemaRef
-            | object = EVENT_SYMBOL eventRef
-            | object = FUNCTION_SYMBOL functionRef
-            | object = PROCEDURE_SYMBOL procedureRef
-            | object = TABLE_SYMBOL tableRef
-            | object = TRIGGER_SYMBOL triggerRef
-            | object = VIEW_SYMBOL viewRef
-            | {serverVersion >= 50704}? object = USER_SYMBOL user
+            db_object = DATABASE_SYMBOL ifNotExists? schemaRef
+            | db_object = EVENT_SYMBOL eventRef
+            | db_object = FUNCTION_SYMBOL functionRef
+            | db_object = PROCEDURE_SYMBOL procedureRef
+            | db_object = TABLE_SYMBOL tableRef
+            | db_object = TRIGGER_SYMBOL triggerRef
+            | db_object = VIEW_SYMBOL viewRef
+            | {serverVersion >= 50704}? db_object = USER_SYMBOL user
         )
         | value = PROCEDURE_SYMBOL STATUS_SYMBOL likeOrWhere?
         | value = FUNCTION_SYMBOL STATUS_SYMBOL likeOrWhere?
@@ -2179,18 +2179,18 @@ profileType:
 //----------------------------------------------------------------------------------------------------------------------
 
 otherAdministrativeStatement:
-    type = BINLOG_SYMBOL textLiteral
-    | type = CACHE_SYMBOL INDEX_SYMBOL keyCacheListOrParts IN_SYMBOL (
+    type_expression = BINLOG_SYMBOL textLiteral
+    | type_expression = CACHE_SYMBOL INDEX_SYMBOL keyCacheListOrParts IN_SYMBOL (
         identifier
         | DEFAULT_SYMBOL
     )
-    | type = FLUSH_SYMBOL noWriteToBinLog? (
+    | type_expression = FLUSH_SYMBOL noWriteToBinLog? (
         flushTables
         | flushOption (COMMA_SYMBOL flushOption)*
     )
-    | type = KILL_SYMBOL (CONNECTION_SYMBOL | QUERY_SYMBOL)? expr
-    | type = LOAD_SYMBOL INDEX_SYMBOL INTO_SYMBOL CACHE_SYMBOL preloadTail
-    | {serverVersion >= 50709}? type = SHUTDOWN_SYMBOL
+    | type_expression = KILL_SYMBOL (CONNECTION_SYMBOL | QUERY_SYMBOL)? expr
+    | type_expression = LOAD_SYMBOL INDEX_SYMBOL INTO_SYMBOL CACHE_SYMBOL preloadTail
+    | {serverVersion >= 50709}? type_expression = SHUTDOWN_SYMBOL
 ;
 
 keyCacheListOrParts:
@@ -2378,7 +2378,7 @@ restartServer:
 //----------------- Expression support ---------------------------------------------------------------------------------
 
 expr:
-    boolPri (IS_SYMBOL notRule? type = (TRUE_SYMBOL | FALSE_SYMBOL | UNKNOWN_SYMBOL))? # exprIs
+    boolPri (IS_SYMBOL notRule? type_expression = (TRUE_SYMBOL | FALSE_SYMBOL | UNKNOWN_SYMBOL))? # exprIs
     | NOT_SYMBOL expr                                                                  # exprNot
     | expr op = (AND_SYMBOL | LOGICAL_AND_OPERATOR) expr                               # exprAnd
     | expr XOR_SYMBOL expr                                                             # exprXor
@@ -3073,12 +3073,12 @@ constraintEnforcement:
 ;
 
 tableConstraintDef:
-    type = (KEY_SYMBOL | INDEX_SYMBOL) indexNameAndType? keyListVariants indexOption*
-    | type = FULLTEXT_SYMBOL keyOrIndex? indexName? keyListVariants fulltextIndexOption*
-    | type = SPATIAL_SYMBOL keyOrIndex? indexName? keyListVariants spatialIndexOption*
+    type_expression = (KEY_SYMBOL | INDEX_SYMBOL) indexNameAndType? keyListVariants indexOption*
+    | type_expression = FULLTEXT_SYMBOL keyOrIndex? indexName? keyListVariants fulltextIndexOption*
+    | type_expression = SPATIAL_SYMBOL keyOrIndex? indexName? keyListVariants spatialIndexOption*
     | constraintName? (
-        (type = PRIMARY_SYMBOL KEY_SYMBOL | type = UNIQUE_SYMBOL keyOrIndex?) indexNameAndType? keyListVariants indexOption*
-        | type = FOREIGN_SYMBOL KEY_SYMBOL indexName? keyList references
+        (type_expression = PRIMARY_SYMBOL KEY_SYMBOL | type_expression = UNIQUE_SYMBOL keyOrIndex?) indexNameAndType? keyListVariants indexOption*
+        | type_expression = FOREIGN_SYMBOL KEY_SYMBOL indexName? keyList references
         | checkConstraint ({serverVersion >= 80017}? constraintEnforcement)?
     )
 ;
@@ -3220,49 +3220,49 @@ dataTypeDefinition: // For external use only. Don't reference this in the normal
     dataType EOF
 ;
 
-dataType: // type in sql_yacc.yy
-    type = (
+dataType: // type_expression in sql_yacc.yy
+    type_expression = (
         INT_SYMBOL
         | TINYINT_SYMBOL
         | SMALLINT_SYMBOL
         | MEDIUMINT_SYMBOL
         | BIGINT_SYMBOL
     ) fieldLength? fieldOptions?
-    | (type = REAL_SYMBOL | type = DOUBLE_SYMBOL PRECISION_SYMBOL?) precision? fieldOptions?
-    | type = (FLOAT_SYMBOL | DECIMAL_SYMBOL | NUMERIC_SYMBOL | FIXED_SYMBOL) floatOptions? fieldOptions?
-    | type = BIT_SYMBOL fieldLength?
-    | type = (BOOL_SYMBOL | BOOLEAN_SYMBOL)
-    | type = CHAR_SYMBOL fieldLength? charsetWithOptBinary?
+    | (type_expression = REAL_SYMBOL | type_expression = DOUBLE_SYMBOL PRECISION_SYMBOL?) precision? fieldOptions?
+    | type_expression = (FLOAT_SYMBOL | DECIMAL_SYMBOL | NUMERIC_SYMBOL | FIXED_SYMBOL) floatOptions? fieldOptions?
+    | type_expression = BIT_SYMBOL fieldLength?
+    | type_expression = (BOOL_SYMBOL | BOOLEAN_SYMBOL)
+    | type_expression = CHAR_SYMBOL fieldLength? charsetWithOptBinary?
     | nchar fieldLength? BINARY_SYMBOL?
-    | type = BINARY_SYMBOL fieldLength?
-    | (type = CHAR_SYMBOL VARYING_SYMBOL | type = VARCHAR_SYMBOL) fieldLength charsetWithOptBinary?
+    | type_expression = BINARY_SYMBOL fieldLength?
+    | (type_expression = CHAR_SYMBOL VARYING_SYMBOL | type_expression = VARCHAR_SYMBOL) fieldLength charsetWithOptBinary?
     | (
-        type = NATIONAL_SYMBOL VARCHAR_SYMBOL
-        | type = NVARCHAR_SYMBOL
-        | type = NCHAR_SYMBOL VARCHAR_SYMBOL
-        | type = NATIONAL_SYMBOL CHAR_SYMBOL VARYING_SYMBOL
-        | type = NCHAR_SYMBOL VARYING_SYMBOL
+        type_expression = NATIONAL_SYMBOL VARCHAR_SYMBOL
+        | type_expression = NVARCHAR_SYMBOL
+        | type_expression = NCHAR_SYMBOL VARCHAR_SYMBOL
+        | type_expression = NATIONAL_SYMBOL CHAR_SYMBOL VARYING_SYMBOL
+        | type_expression = NCHAR_SYMBOL VARYING_SYMBOL
     ) fieldLength BINARY_SYMBOL?
-    | type = VARBINARY_SYMBOL fieldLength
-    | type = YEAR_SYMBOL fieldLength? fieldOptions?
-    | type = DATE_SYMBOL
-    | type = TIME_SYMBOL typeDatetimePrecision?
-    | type = TIMESTAMP_SYMBOL typeDatetimePrecision?
-    | type = DATETIME_SYMBOL typeDatetimePrecision?
-    | type = TINYBLOB_SYMBOL
-    | type = BLOB_SYMBOL fieldLength?
-    | type = (MEDIUMBLOB_SYMBOL | LONGBLOB_SYMBOL)
-    | type = LONG_SYMBOL VARBINARY_SYMBOL
-    | type = LONG_SYMBOL (CHAR_SYMBOL VARYING_SYMBOL | VARCHAR_SYMBOL)? charsetWithOptBinary?
-    | type = TINYTEXT_SYMBOL charsetWithOptBinary?
-    | type = TEXT_SYMBOL fieldLength? charsetWithOptBinary?
-    | type = MEDIUMTEXT_SYMBOL charsetWithOptBinary?
-    | type = LONGTEXT_SYMBOL charsetWithOptBinary?
-    | type = ENUM_SYMBOL stringList charsetWithOptBinary?
-    | type = SET_SYMBOL stringList charsetWithOptBinary?
-    | type = SERIAL_SYMBOL
-    | {serverVersion >= 50708}? type = JSON_SYMBOL
-    | type = (
+    | type_expression = VARBINARY_SYMBOL fieldLength
+    | type_expression = YEAR_SYMBOL fieldLength? fieldOptions?
+    | type_expression = DATE_SYMBOL
+    | type_expression = TIME_SYMBOL typeDatetimePrecision?
+    | type_expression = TIMESTAMP_SYMBOL typeDatetimePrecision?
+    | type_expression = DATETIME_SYMBOL typeDatetimePrecision?
+    | type_expression = TINYBLOB_SYMBOL
+    | type_expression = BLOB_SYMBOL fieldLength?
+    | type_expression = (MEDIUMBLOB_SYMBOL | LONGBLOB_SYMBOL)
+    | type_expression = LONG_SYMBOL VARBINARY_SYMBOL
+    | type_expression = LONG_SYMBOL (CHAR_SYMBOL VARYING_SYMBOL | VARCHAR_SYMBOL)? charsetWithOptBinary?
+    | type_expression = TINYTEXT_SYMBOL charsetWithOptBinary?
+    | type_expression = TEXT_SYMBOL fieldLength? charsetWithOptBinary?
+    | type_expression = MEDIUMTEXT_SYMBOL charsetWithOptBinary?
+    | type_expression = LONGTEXT_SYMBOL charsetWithOptBinary?
+    | type_expression = ENUM_SYMBOL stringList charsetWithOptBinary?
+    | type_expression = SET_SYMBOL stringList charsetWithOptBinary?
+    | type_expression = SERIAL_SYMBOL
+    | {serverVersion >= 50708}? type_expression = JSON_SYMBOL
+    | type_expression = (
         GEOMETRY_SYMBOL
         | GEOMETRYCOLLECTION_SYMBOL
         | POINT_SYMBOL
@@ -3275,13 +3275,13 @@ dataType: // type in sql_yacc.yy
 ;
 
 nchar:
-    type = NCHAR_SYMBOL
-    | type = NATIONAL_SYMBOL CHAR_SYMBOL
+    type_expression = NCHAR_SYMBOL
+    | type_expression = NATIONAL_SYMBOL CHAR_SYMBOL
 ;
 
 realType:
-    type = REAL_SYMBOL
-    | type = DOUBLE_SYMBOL PRECISION_SYMBOL?
+    type_expression = REAL_SYMBOL
+    | type_expression = DOUBLE_SYMBOL PRECISION_SYMBOL?
 ;
 
 fieldLength:
@@ -3293,7 +3293,7 @@ fieldOptions: (SIGNED_SYMBOL | UNSIGNED_SYMBOL | ZEROFILL_SYMBOL)+
 
 charsetWithOptBinary:
     ascii
-    | unicode
+    | unicode_data
     | BYTE_SYMBOL
     | charset charsetName BINARY_SYMBOL?
     | BINARY_SYMBOL (charset charsetName)?
@@ -3304,7 +3304,7 @@ ascii:
     | BINARY_SYMBOL ASCII_SYMBOL
 ;
 
-unicode:
+unicode_data:
     UNICODE_SYMBOL BINARY_SYMBOL?
     | BINARY_SYMBOL UNICODE_SYMBOL
 ;
@@ -3359,7 +3359,7 @@ createTableOption: // In the order as they appear in the server grammar.
     ) EQUAL_OPERATOR? ternaryOption
     | option = (CHECKSUM_SYMBOL | TABLE_CHECKSUM_SYMBOL) EQUAL_OPERATOR? ulong_number
     | option = DELAY_KEY_WRITE_SYMBOL EQUAL_OPERATOR? ulong_number
-    | option = ROW_FORMAT_SYMBOL EQUAL_OPERATOR? format = (
+    | option = ROW_FORMAT_SYMBOL EQUAL_OPERATOR? format_expression = (
         DEFAULT_SYMBOL
         | DYNAMIC_SYMBOL
         | FIXED_SYMBOL
@@ -3486,7 +3486,7 @@ ifNotExists:
 ;
 
 procedureParameter:
-    type = (IN_SYMBOL | OUT_SYMBOL | INOUT_SYMBOL)? functionParameter
+    type_expression = (IN_SYMBOL | OUT_SYMBOL | INOUT_SYMBOL)? functionParameter
 ;
 
 functionParameter:
@@ -3623,8 +3623,8 @@ usePartition:
 
 //----------------- Object names and references ------------------------------------------------------------------------
 
-// For each object we have at least 2 rules here:
-// 1) The name when creating that object.
+// For each db_object we have at least 2 rules here:
+// 1) The name when creating that db_object.
 // 2) The name when used to reference it from other rules.
 //
 // Sometimes we need additional reference rules with different form, depending on the place such a reference is used.
@@ -3641,7 +3641,7 @@ columnName:
     | {serverVersion < 80000}? fieldIdentifier
 ;
 
-// A reference to a column of the object we are working on.
+// A reference to a column of the db_object we are working on.
 columnInternalRef:
     identifier
 ;
