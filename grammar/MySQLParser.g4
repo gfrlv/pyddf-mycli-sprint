@@ -52,28 +52,7 @@ options {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-@header {/*
- * Copyright (c) 2018, 2020, Oracle and/or its affiliates. All rights reserved.
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License, version 2.0,
- * as published by the Free Software Foundation.
- *
- * This program is also distributed with certain software (including
- * but not limited to OpenSSL) that is licensed under separate terms, as
- * designated in a particular file or component or in included license
- * documentation. The authors of MySQL hereby grant you an additional
- * permission to link the program and your derivative works with the
- * separately licensed software that they have included with MySQL.
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See
- * the GNU General Public License, version 2.0, for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software Foundation, Inc.,
- * 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
- */
+@header {
 }
 
 @postinclude {
@@ -289,7 +268,7 @@ alterListItem:
     ) collate?
     | FORCE_SYMBOL
     | ORDER_SYMBOL BY_SYMBOL alterOrderList
-    | {serverVersion >= 50708 && serverVersion < 80000}? UPGRADE_SYMBOL PARTITIONING_SYMBOL
+    | {serverVersion >= 50708 and serverVersion < 80000}? UPGRADE_SYMBOL PARTITIONING_SYMBOL
 ;
 
 place:
@@ -1229,7 +1208,7 @@ selectOption:
     querySpecOption
     | SQL_NO_CACHE_SYMBOL // Deprecated and ignored in 8.0.
     | {serverVersion < 80000}? SQL_CACHE_SYMBOL
-    | {serverVersion >= 50704 && serverVersion < 50708}? MAX_STATEMENT_TIME_SYMBOL EQUAL_OPERATOR real_ulong_number
+    | {serverVersion >= 50704 and serverVersion < 50708}? MAX_STATEMENT_TIME_SYMBOL EQUAL_OPERATOR real_ulong_number
 ;
 
 lockingClauseList:
@@ -2149,7 +2128,7 @@ showCommandType:
 ;
 
 nonBlocking:
-    {serverVersion >= 50700 && serverVersion < 50706}? NONBLOCKING_SYMBOL?
+    {serverVersion >= 50700 and serverVersion < 50706}? NONBLOCKING_SYMBOL?
     | /* empty */
 ;
 
@@ -3909,7 +3888,7 @@ stringList:
 // TEXT_STRING_validated in sql_yacc.yy.
 textStringLiteral:
     value = SINGLE_QUOTED_TEXT
-    | {!isSqlModeActive(AnsiQuotes)}? value = DOUBLE_QUOTED_TEXT
+    | {not isSqlModeActive(AnsiQuotes)}? value = DOUBLE_QUOTED_TEXT
 ;
 
 textString:

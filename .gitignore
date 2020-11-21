@@ -4,3 +4,4 @@ MySQLParser.py
 MySQLParserListener.py
 MySQLLexer.interp
 MySQLLexer.py
+grammar/__pycache__
