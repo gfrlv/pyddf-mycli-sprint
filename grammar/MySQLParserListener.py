@@ -4522,12 +4522,12 @@ class MySQLParserListener(ParseTreeListener):
         pass
 
 
-    # Enter a parse tree produced by MySQLParser#unicode.
-    def enterUnicode(self, ctx:MySQLParser.UnicodeContext):
+    # Enter a parse tree produced by MySQLParser#unicode_data.
+    def enterUnicode_data(self, ctx:MySQLParser.Unicode_dataContext):
         pass
 
-    # Exit a parse tree produced by MySQLParser#unicode.
-    def exitUnicode(self, ctx:MySQLParser.UnicodeContext):
+    # Exit a parse tree produced by MySQLParser#unicode_data.
+    def exitUnicode_data(self, ctx:MySQLParser.Unicode_dataContext):
         pass
 
 

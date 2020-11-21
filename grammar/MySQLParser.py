@@ -6399,7 +6399,7 @@ class MySQLParser ( MySQLBaseRecognizer ):
     RULE_fieldOptions = 462
     RULE_charsetWithOptBinary = 463
     RULE_ascii = 464
-    RULE_unicode = 465
+    RULE_unicode_data = 465
     RULE_wsNumCodepoints = 466
     RULE_typeDatetimePrecision = 467
     RULE_charsetName = 468
@@ -6684,7 +6684,7 @@ class MySQLParser ( MySQLBaseRecognizer ):
                    "visibility", "indexTypeClause", "fulltextIndexOption", 
                    "spatialIndexOption", "dataTypeDefinition", "dataType", 
                    "nchar", "realType", "fieldLength", "fieldOptions", "charsetWithOptBinary", 
-                   "ascii", "unicode", "wsNumCodepoints", "typeDatetimePrecision", 
+                   "ascii", "unicode_data", "wsNumCodepoints", "typeDatetimePrecision", 
                    "charsetName", "collationName", "createTableOptions", 
                    "createTableOptionsSpaceSeparated", "createTableOption", 
                    "ternaryOption", "defaultCollation", "defaultEncryption", 
@@ -13051,7 +13051,7 @@ class MySQLParser ( MySQLBaseRecognizer ):
         def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
             super().__init__(parent, invokingState)
             self.parser = parser
-            self.type = None # Token
+            self.type_expression = None # Token
 
         def FUNCTION_SYMBOL(self):
             return self.getToken(MySQLParser.FUNCTION_SYMBOL, 0)
@@ -13121,10 +13121,10 @@ class MySQLParser ( MySQLBaseRecognizer ):
             self.state = 2036
             self.match(MySQLParser.RETURNS_SYMBOL)
             self.state = 2037
-            localctx.type = self._input.LT(1)
+            localctx.type_expression = self._input.LT(1)
             _la = self._input.LA(1)
             if not(_la==MySQLParser.DECIMAL_SYMBOL or _la==MySQLParser.INT_SYMBOL or _la==MySQLParser.REAL_SYMBOL or _la==MySQLParser.STRING_SYMBOL):
-                localctx.type = self._errHandler.recoverInline(self)
+                localctx.type_expression = self._errHandler.recoverInline(self)
             else:
                 self._errHandler.reportMatch(self)
                 self.consume()
@@ -13411,7 +13411,7 @@ class MySQLParser ( MySQLBaseRecognizer ):
         def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
             super().__init__(parent, invokingState)
             self.parser = parser
-            self.type = None # Token
+            self.type_expression = None # Token
 
         def createIndexTarget(self):
             return self.getTypedRuleContext(MySQLParser.CreateIndexTargetContext,0)
@@ -13512,7 +13512,7 @@ class MySQLParser ( MySQLBaseRecognizer ):
 
 
                 self.state = 2078
-                localctx.type = self.match(MySQLParser.INDEX_SYMBOL)
+                localctx.type_expression = self.match(MySQLParser.INDEX_SYMBOL)
                 self.state = 2087
                 self._errHandler.sync(self)
                 la_ = self._interp.adaptivePredict(self._input,139,self._ctx)
@@ -13561,7 +13561,7 @@ class MySQLParser ( MySQLBaseRecognizer ):
                 pass
             elif token in [MySQLParser.FULLTEXT_SYMBOL]:
                 self.state = 2096
-                localctx.type = self.match(MySQLParser.FULLTEXT_SYMBOL)
+                localctx.type_expression = self.match(MySQLParser.FULLTEXT_SYMBOL)
                 self.state = 2097
                 self.match(MySQLParser.INDEX_SYMBOL)
                 self.state = 2098
@@ -13582,7 +13582,7 @@ class MySQLParser ( MySQLBaseRecognizer ):
                 pass
             elif token in [MySQLParser.SPATIAL_SYMBOL]:
                 self.state = 2106
-                localctx.type = self.match(MySQLParser.SPATIAL_SYMBOL)
+                localctx.type_expression = self.match(MySQLParser.SPATIAL_SYMBOL)
                 self.state = 2107
                 self.match(MySQLParser.INDEX_SYMBOL)
                 self.state = 2108
@@ -16783,7 +16783,7 @@ class MySQLParser ( MySQLBaseRecognizer ):
         def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
             super().__init__(parent, invokingState)
             self.parser = parser
-            self.type = None # Token
+            self.type_expression = None # Token
 
         def indexRef(self):
             return self.getTypedRuleContext(MySQLParser.IndexRefContext,0)
@@ -16837,7 +16837,7 @@ class MySQLParser ( MySQLBaseRecognizer ):
 
 
             self.state = 2501
-            localctx.type = self.match(MySQLParser.INDEX_SYMBOL)
+            localctx.type_expression = self.match(MySQLParser.INDEX_SYMBOL)
             self.state = 2502
             self.indexRef()
             self.state = 2503
@@ -17073,7 +17073,7 @@ class MySQLParser ( MySQLBaseRecognizer ):
         def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
             super().__init__(parent, invokingState)
             self.parser = parser
-            self.type = None # Token
+            self.type_expression = None # Token
 
         def tableRefList(self):
             return self.getTypedRuleContext(MySQLParser.TableRefListContext,0)
@@ -17128,10 +17128,10 @@ class MySQLParser ( MySQLBaseRecognizer ):
 
 
             self.state = 2536
-            localctx.type = self._input.LT(1)
+            localctx.type_expression = self._input.LT(1)
             _la = self._input.LA(1)
             if not(_la==MySQLParser.TABLES_SYMBOL or _la==MySQLParser.TABLE_SYMBOL):
-                localctx.type = self._errHandler.recoverInline(self)
+                localctx.type_expression = self._errHandler.recoverInline(self)
             else:
                 self._errHandler.reportMatch(self)
                 self.consume()
@@ -23883,7 +23883,7 @@ class MySQLParser ( MySQLBaseRecognizer ):
         def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
             super().__init__(parent, invokingState)
             self.parser = parser
-            self.type = None # Token
+            self.type_expression = None # Token
 
         def JOIN_SYMBOL(self):
             return self.getToken(MySQLParser.JOIN_SYMBOL, 0)
@@ -23927,10 +23927,10 @@ class MySQLParser ( MySQLBaseRecognizer ):
                 _la = self._input.LA(1)
                 if _la==MySQLParser.CROSS_SYMBOL or _la==MySQLParser.INNER_SYMBOL:
                     self.state = 3375
-                    localctx.type = self._input.LT(1)
+                    localctx.type_expression = self._input.LT(1)
                     _la = self._input.LA(1)
                     if not(_la==MySQLParser.CROSS_SYMBOL or _la==MySQLParser.INNER_SYMBOL):
-                        localctx.type = self._errHandler.recoverInline(self)
+                        localctx.type_expression = self._errHandler.recoverInline(self)
                     else:
                         self._errHandler.reportMatch(self)
                         self.consume()
@@ -23942,7 +23942,7 @@ class MySQLParser ( MySQLBaseRecognizer ):
             elif token in [MySQLParser.STRAIGHT_JOIN_SYMBOL]:
                 self.enterOuterAlt(localctx, 2)
                 self.state = 3379
-                localctx.type = self.match(MySQLParser.STRAIGHT_JOIN_SYMBOL)
+                localctx.type_expression = self.match(MySQLParser.STRAIGHT_JOIN_SYMBOL)
                 pass
             else:
                 raise NoViableAltException(self)
@@ -23961,7 +23961,7 @@ class MySQLParser ( MySQLBaseRecognizer ):
         def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
             super().__init__(parent, invokingState)
             self.parser = parser
-            self.type = None # Token
+            self.type_expression = None # Token
 
         def JOIN_SYMBOL(self):
             return self.getToken(MySQLParser.JOIN_SYMBOL, 0)
@@ -23997,10 +23997,10 @@ class MySQLParser ( MySQLBaseRecognizer ):
         try:
             self.enterOuterAlt(localctx, 1)
             self.state = 3382
-            localctx.type = self._input.LT(1)
+            localctx.type_expression = self._input.LT(1)
             _la = self._input.LA(1)
             if not(_la==MySQLParser.LEFT_SYMBOL or _la==MySQLParser.RIGHT_SYMBOL):
-                localctx.type = self._errHandler.recoverInline(self)
+                localctx.type_expression = self._errHandler.recoverInline(self)
             else:
                 self._errHandler.reportMatch(self)
                 self.consume()
@@ -29436,7 +29436,7 @@ class MySQLParser ( MySQLBaseRecognizer ):
         def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
             super().__init__(parent, invokingState)
             self.parser = parser
-            self.type = None # Token
+            self.type_expression = None # Token
 
         def identifier(self):
             return self.getTypedRuleContext(MySQLParser.IdentifierContext,0)
@@ -29492,7 +29492,7 @@ class MySQLParser ( MySQLBaseRecognizer ):
             if token in [MySQLParser.PREPARE_SYMBOL]:
                 self.enterOuterAlt(localctx, 1)
                 self.state = 4155
-                localctx.type = self.match(MySQLParser.PREPARE_SYMBOL)
+                localctx.type_expression = self.match(MySQLParser.PREPARE_SYMBOL)
                 self.state = 4156
                 self.identifier()
                 self.state = 4157
@@ -29520,10 +29520,10 @@ class MySQLParser ( MySQLBaseRecognizer ):
             elif token in [MySQLParser.DEALLOCATE_SYMBOL, MySQLParser.DROP_SYMBOL]:
                 self.enterOuterAlt(localctx, 3)
                 self.state = 4163
-                localctx.type = self._input.LT(1)
+                localctx.type_expression = self._input.LT(1)
                 _la = self._input.LA(1)
                 if not(_la==MySQLParser.DEALLOCATE_SYMBOL or _la==MySQLParser.DROP_SYMBOL):
-                    localctx.type = self._errHandler.recoverInline(self)
+                    localctx.type_expression = self._errHandler.recoverInline(self)
                 else:
                     self._errHandler.reportMatch(self)
                     self.consume()
@@ -32315,7 +32315,7 @@ class MySQLParser ( MySQLBaseRecognizer ):
         def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
             super().__init__(parent, invokingState)
             self.parser = parser
-            self.object = None # Token
+            self.db_object = None # Token
 
         def roleIdentifierOrText(self):
             return self.getTypedRuleContext(MySQLParser.RoleIdentifierOrTextContext,0)
@@ -32563,14 +32563,14 @@ class MySQLParser ( MySQLBaseRecognizer ):
                     self.state = 4588
                     self.match(MySQLParser.TEMPORARY_SYMBOL)
                     self.state = 4589
-                    localctx.object = self.match(MySQLParser.TABLES_SYMBOL)
+                    localctx.db_object = self.match(MySQLParser.TABLES_SYMBOL)
 
                 elif la_ == 2:
                     self.state = 4590
-                    localctx.object = self._input.LT(1)
+                    localctx.db_object = self._input.LT(1)
                     _la = self._input.LA(1)
                     if not(_la==MySQLParser.ROUTINE_SYMBOL or _la==MySQLParser.TABLESPACE_SYMBOL or _la==MySQLParser.USER_SYMBOL or _la==MySQLParser.VIEW_SYMBOL):
-                        localctx.object = self._errHandler.recoverInline(self)
+                        localctx.db_object = self._errHandler.recoverInline(self)
                     else:
                         self._errHandler.reportMatch(self)
                         self.consume()
@@ -32591,10 +32591,10 @@ class MySQLParser ( MySQLBaseRecognizer ):
                 self.state = 4595
                 self.match(MySQLParser.REPLICATION_SYMBOL)
                 self.state = 4596
-                localctx.object = self._input.LT(1)
+                localctx.db_object = self._input.LT(1)
                 _la = self._input.LA(1)
                 if not(_la==MySQLParser.CLIENT_SYMBOL or _la==MySQLParser.SLAVE_SYMBOL):
-                    localctx.object = self._errHandler.recoverInline(self)
+                    localctx.db_object = self._errHandler.recoverInline(self)
                 else:
                     self._errHandler.reportMatch(self)
                     self.consume()
@@ -33278,7 +33278,7 @@ class MySQLParser ( MySQLBaseRecognizer ):
         def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
             super().__init__(parent, invokingState)
             self.parser = parser
-            self.type = None # Token
+            self.type_expression = None # Token
 
         def TABLE_SYMBOL(self):
             return self.getToken(MySQLParser.TABLE_SYMBOL, 0)
@@ -33356,7 +33356,7 @@ class MySQLParser ( MySQLBaseRecognizer ):
             if token in [MySQLParser.ANALYZE_SYMBOL]:
                 self.enterOuterAlt(localctx, 1)
                 self.state = 4695
-                localctx.type = self.match(MySQLParser.ANALYZE_SYMBOL)
+                localctx.type_expression = self.match(MySQLParser.ANALYZE_SYMBOL)
                 self.state = 4697
                 self._errHandler.sync(self)
                 _la = self._input.LA(1)
@@ -33385,7 +33385,7 @@ class MySQLParser ( MySQLBaseRecognizer ):
             elif token in [MySQLParser.CHECK_SYMBOL]:
                 self.enterOuterAlt(localctx, 2)
                 self.state = 4705
-                localctx.type = self.match(MySQLParser.CHECK_SYMBOL)
+                localctx.type_expression = self.match(MySQLParser.CHECK_SYMBOL)
                 self.state = 4706
                 self.match(MySQLParser.TABLE_SYMBOL)
                 self.state = 4707
@@ -33404,7 +33404,7 @@ class MySQLParser ( MySQLBaseRecognizer ):
             elif token in [MySQLParser.CHECKSUM_SYMBOL]:
                 self.enterOuterAlt(localctx, 3)
                 self.state = 4714
-                localctx.type = self.match(MySQLParser.CHECKSUM_SYMBOL)
+                localctx.type_expression = self.match(MySQLParser.CHECKSUM_SYMBOL)
                 self.state = 4715
                 self.match(MySQLParser.TABLE_SYMBOL)
                 self.state = 4716
@@ -33426,7 +33426,7 @@ class MySQLParser ( MySQLBaseRecognizer ):
             elif token in [MySQLParser.OPTIMIZE_SYMBOL]:
                 self.enterOuterAlt(localctx, 4)
                 self.state = 4720
-                localctx.type = self.match(MySQLParser.OPTIMIZE_SYMBOL)
+                localctx.type_expression = self.match(MySQLParser.OPTIMIZE_SYMBOL)
                 self.state = 4722
                 self._errHandler.sync(self)
                 _la = self._input.LA(1)
@@ -33443,7 +33443,7 @@ class MySQLParser ( MySQLBaseRecognizer ):
             elif token in [MySQLParser.REPAIR_SYMBOL]:
                 self.enterOuterAlt(localctx, 5)
                 self.state = 4726
-                localctx.type = self.match(MySQLParser.REPAIR_SYMBOL)
+                localctx.type_expression = self.match(MySQLParser.REPAIR_SYMBOL)
                 self.state = 4728
                 self._errHandler.sync(self)
                 _la = self._input.LA(1)
@@ -33716,7 +33716,7 @@ class MySQLParser ( MySQLBaseRecognizer ):
             super().__init__(parent, invokingState)
             self.parser = parser
             self.action = None # Token
-            self.type = None # Token
+            self.type_expression = None # Token
 
         def identifier(self):
             return self.getTypedRuleContext(MySQLParser.IdentifierContext,0)
@@ -33790,7 +33790,7 @@ class MySQLParser ( MySQLBaseRecognizer ):
                 self.state = 4762
                 localctx.action = self.match(MySQLParser.INSTALL_SYMBOL)
                 self.state = 4763
-                localctx.type = self.match(MySQLParser.PLUGIN_SYMBOL)
+                localctx.type_expression = self.match(MySQLParser.PLUGIN_SYMBOL)
                 self.state = 4764
                 self.identifier()
                 self.state = 4765
@@ -33804,7 +33804,7 @@ class MySQLParser ( MySQLBaseRecognizer ):
                 self.state = 4768
                 localctx.action = self.match(MySQLParser.INSTALL_SYMBOL)
                 self.state = 4769
-                localctx.type = self.match(MySQLParser.COMPONENT_SYMBOL)
+                localctx.type_expression = self.match(MySQLParser.COMPONENT_SYMBOL)
                 self.state = 4770
                 self.textStringLiteralList()
                 pass
@@ -33814,7 +33814,7 @@ class MySQLParser ( MySQLBaseRecognizer ):
                 self.state = 4771
                 localctx.action = self.match(MySQLParser.UNINSTALL_SYMBOL)
                 self.state = 4772
-                localctx.type = self.match(MySQLParser.PLUGIN_SYMBOL)
+                localctx.type_expression = self.match(MySQLParser.PLUGIN_SYMBOL)
                 self.state = 4773
                 self.pluginRef()
                 pass
@@ -33824,7 +33824,7 @@ class MySQLParser ( MySQLBaseRecognizer ):
                 self.state = 4774
                 localctx.action = self.match(MySQLParser.UNINSTALL_SYMBOL)
                 self.state = 4775
-                localctx.type = self.match(MySQLParser.COMPONENT_SYMBOL)
+                localctx.type_expression = self.match(MySQLParser.COMPONENT_SYMBOL)
                 self.state = 4776
                 self.componentRef()
                 self.state = 4781
@@ -34955,7 +34955,7 @@ class MySQLParser ( MySQLBaseRecognizer ):
             super().__init__(parent, invokingState)
             self.parser = parser
             self.value = None # Token
-            self.object = None # Token
+            self.db_object = None # Token
 
         def SHOW_SYMBOL(self):
             return self.getToken(MySQLParser.SHOW_SYMBOL, 0)
@@ -35839,7 +35839,7 @@ class MySQLParser ( MySQLBaseRecognizer ):
                 la_ = self._interp.adaptivePredict(self._input,637,self._ctx)
                 if la_ == 1:
                     self.state = 5117
-                    localctx.object = self.match(MySQLParser.DATABASE_SYMBOL)
+                    localctx.db_object = self.match(MySQLParser.DATABASE_SYMBOL)
                     self.state = 5119
                     self._errHandler.sync(self)
                     la_ = self._interp.adaptivePredict(self._input,636,self._ctx)
@@ -35854,42 +35854,42 @@ class MySQLParser ( MySQLBaseRecognizer ):
 
                 elif la_ == 2:
                     self.state = 5122
-                    localctx.object = self.match(MySQLParser.EVENT_SYMBOL)
+                    localctx.db_object = self.match(MySQLParser.EVENT_SYMBOL)
                     self.state = 5123
                     self.eventRef()
                     pass
 
                 elif la_ == 3:
                     self.state = 5124
-                    localctx.object = self.match(MySQLParser.FUNCTION_SYMBOL)
+                    localctx.db_object = self.match(MySQLParser.FUNCTION_SYMBOL)
                     self.state = 5125
                     self.functionRef()
                     pass
 
                 elif la_ == 4:
                     self.state = 5126
-                    localctx.object = self.match(MySQLParser.PROCEDURE_SYMBOL)
+                    localctx.db_object = self.match(MySQLParser.PROCEDURE_SYMBOL)
                     self.state = 5127
                     self.procedureRef()
                     pass
 
                 elif la_ == 5:
                     self.state = 5128
-                    localctx.object = self.match(MySQLParser.TABLE_SYMBOL)
+                    localctx.db_object = self.match(MySQLParser.TABLE_SYMBOL)
                     self.state = 5129
                     self.tableRef()
                     pass
 
                 elif la_ == 6:
                     self.state = 5130
-                    localctx.object = self.match(MySQLParser.TRIGGER_SYMBOL)
+                    localctx.db_object = self.match(MySQLParser.TRIGGER_SYMBOL)
                     self.state = 5131
                     self.triggerRef()
                     pass
 
                 elif la_ == 7:
                     self.state = 5132
-                    localctx.object = self.match(MySQLParser.VIEW_SYMBOL)
+                    localctx.db_object = self.match(MySQLParser.VIEW_SYMBOL)
                     self.state = 5133
                     self.viewRef()
                     pass
@@ -35900,7 +35900,7 @@ class MySQLParser ( MySQLBaseRecognizer ):
                         from antlr4.error.Errors import FailedPredicateException
                         raise FailedPredicateException(self, "serverVersion >= 50704")
                     self.state = 5135
-                    localctx.object = self.match(MySQLParser.USER_SYMBOL)
+                    localctx.db_object = self.match(MySQLParser.USER_SYMBOL)
                     self.state = 5136
                     self.user()
                     pass
@@ -36306,7 +36306,7 @@ class MySQLParser ( MySQLBaseRecognizer ):
         def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
             super().__init__(parent, invokingState)
             self.parser = parser
-            self.type = None # Token
+            self.type_expression = None # Token
 
         def textLiteral(self):
             return self.getTypedRuleContext(MySQLParser.TextLiteralContext,0)
@@ -36411,7 +36411,7 @@ class MySQLParser ( MySQLBaseRecognizer ):
             if la_ == 1:
                 self.enterOuterAlt(localctx, 1)
                 self.state = 5186
-                localctx.type = self.match(MySQLParser.BINLOG_SYMBOL)
+                localctx.type_expression = self.match(MySQLParser.BINLOG_SYMBOL)
                 self.state = 5187
                 self.textLiteral()
                 pass
@@ -36419,7 +36419,7 @@ class MySQLParser ( MySQLBaseRecognizer ):
             elif la_ == 2:
                 self.enterOuterAlt(localctx, 2)
                 self.state = 5188
-                localctx.type = self.match(MySQLParser.CACHE_SYMBOL)
+                localctx.type_expression = self.match(MySQLParser.CACHE_SYMBOL)
                 self.state = 5189
                 self.match(MySQLParser.INDEX_SYMBOL)
                 self.state = 5190
@@ -36445,7 +36445,7 @@ class MySQLParser ( MySQLBaseRecognizer ):
             elif la_ == 3:
                 self.enterOuterAlt(localctx, 3)
                 self.state = 5196
-                localctx.type = self.match(MySQLParser.FLUSH_SYMBOL)
+                localctx.type_expression = self.match(MySQLParser.FLUSH_SYMBOL)
                 self.state = 5198
                 self._errHandler.sync(self)
                 la_ = self._interp.adaptivePredict(self._input,647,self._ctx)
@@ -36485,7 +36485,7 @@ class MySQLParser ( MySQLBaseRecognizer ):
             elif la_ == 4:
                 self.enterOuterAlt(localctx, 4)
                 self.state = 5211
-                localctx.type = self.match(MySQLParser.KILL_SYMBOL)
+                localctx.type_expression = self.match(MySQLParser.KILL_SYMBOL)
                 self.state = 5213
                 self._errHandler.sync(self)
                 la_ = self._interp.adaptivePredict(self._input,650,self._ctx)
@@ -36506,7 +36506,7 @@ class MySQLParser ( MySQLBaseRecognizer ):
             elif la_ == 5:
                 self.enterOuterAlt(localctx, 5)
                 self.state = 5216
-                localctx.type = self.match(MySQLParser.LOAD_SYMBOL)
+                localctx.type_expression = self.match(MySQLParser.LOAD_SYMBOL)
                 self.state = 5217
                 self.match(MySQLParser.INDEX_SYMBOL)
                 self.state = 5218
@@ -36524,7 +36524,7 @@ class MySQLParser ( MySQLBaseRecognizer ):
                     from antlr4.error.Errors import FailedPredicateException
                     raise FailedPredicateException(self, "serverVersion >= 50709")
                 self.state = 5222
-                localctx.type = self.match(MySQLParser.SHUTDOWN_SYMBOL)
+                localctx.type_expression = self.match(MySQLParser.SHUTDOWN_SYMBOL)
                 pass
 
 
@@ -39001,7 +39001,7 @@ class MySQLParser ( MySQLBaseRecognizer ):
 
         def __init__(self, parser, ctx:ParserRuleContext): # actually a MySQLParser.ExprContext
             super().__init__(parser)
-            self.type = None # Token
+            self.type_expression = None # Token
             self.copyFrom(ctx)
 
         def boolPri(self):
@@ -39115,10 +39115,10 @@ class MySQLParser ( MySQLBaseRecognizer ):
 
 
                     self.state = 5492
-                    localctx.type = self._input.LT(1)
+                    localctx.type_expression = self._input.LT(1)
                     _la = self._input.LA(1)
                     if not(_la==MySQLParser.FALSE_SYMBOL or _la==MySQLParser.TRUE_SYMBOL or _la==MySQLParser.UNKNOWN_SYMBOL):
-                        localctx.type = self._errHandler.recoverInline(self)
+                        localctx.type_expression = self._errHandler.recoverInline(self)
                     else:
                         self._errHandler.reportMatch(self)
                         self.consume()
@@ -49243,7 +49243,7 @@ class MySQLParser ( MySQLBaseRecognizer ):
         def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
             super().__init__(parent, invokingState)
             self.parser = parser
-            self.type = None # Token
+            self.type_expression = None # Token
 
         def keyListVariants(self):
             return self.getTypedRuleContext(MySQLParser.KeyListVariantsContext,0)
@@ -49349,10 +49349,10 @@ class MySQLParser ( MySQLBaseRecognizer ):
             if token in [MySQLParser.INDEX_SYMBOL, MySQLParser.KEY_SYMBOL]:
                 self.enterOuterAlt(localctx, 1)
                 self.state = 6884
-                localctx.type = self._input.LT(1)
+                localctx.type_expression = self._input.LT(1)
                 _la = self._input.LA(1)
                 if not(_la==MySQLParser.INDEX_SYMBOL or _la==MySQLParser.KEY_SYMBOL):
-                    localctx.type = self._errHandler.recoverInline(self)
+                    localctx.type_expression = self._errHandler.recoverInline(self)
                 else:
                     self._errHandler.reportMatch(self)
                     self.consume()
@@ -49381,7 +49381,7 @@ class MySQLParser ( MySQLBaseRecognizer ):
             elif token in [MySQLParser.FULLTEXT_SYMBOL]:
                 self.enterOuterAlt(localctx, 2)
                 self.state = 6895
-                localctx.type = self.match(MySQLParser.FULLTEXT_SYMBOL)
+                localctx.type_expression = self.match(MySQLParser.FULLTEXT_SYMBOL)
                 self.state = 6897
                 self._errHandler.sync(self)
                 la_ = self._interp.adaptivePredict(self._input,869,self._ctx)
@@ -49415,7 +49415,7 @@ class MySQLParser ( MySQLBaseRecognizer ):
             elif token in [MySQLParser.SPATIAL_SYMBOL]:
                 self.enterOuterAlt(localctx, 3)
                 self.state = 6909
-                localctx.type = self.match(MySQLParser.SPATIAL_SYMBOL)
+                localctx.type_expression = self.match(MySQLParser.SPATIAL_SYMBOL)
                 self.state = 6911
                 self._errHandler.sync(self)
                 la_ = self._interp.adaptivePredict(self._input,872,self._ctx)
@@ -49465,13 +49465,13 @@ class MySQLParser ( MySQLBaseRecognizer ):
                     token = self._input.LA(1)
                     if token in [MySQLParser.PRIMARY_SYMBOL]:
                         self.state = 6926
-                        localctx.type = self.match(MySQLParser.PRIMARY_SYMBOL)
+                        localctx.type_expression = self.match(MySQLParser.PRIMARY_SYMBOL)
                         self.state = 6927
                         self.match(MySQLParser.KEY_SYMBOL)
                         pass
                     elif token in [MySQLParser.UNIQUE_SYMBOL]:
                         self.state = 6928
-                        localctx.type = self.match(MySQLParser.UNIQUE_SYMBOL)
+                        localctx.type_expression = self.match(MySQLParser.UNIQUE_SYMBOL)
                         self.state = 6930
                         self._errHandler.sync(self)
                         la_ = self._interp.adaptivePredict(self._input,876,self._ctx)
@@ -49508,7 +49508,7 @@ class MySQLParser ( MySQLBaseRecognizer ):
                     pass
                 elif token in [MySQLParser.FOREIGN_SYMBOL]:
                     self.state = 6944
-                    localctx.type = self.match(MySQLParser.FOREIGN_SYMBOL)
+                    localctx.type_expression = self.match(MySQLParser.FOREIGN_SYMBOL)
                     self.state = 6945
                     self.match(MySQLParser.KEY_SYMBOL)
                     self.state = 6947
@@ -51387,7 +51387,7 @@ class MySQLParser ( MySQLBaseRecognizer ):
         def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
             super().__init__(parent, invokingState)
             self.parser = parser
-            self.type = None # Token
+            self.type_expression = None # Token
 
         def INT_SYMBOL(self):
             return self.getToken(MySQLParser.INT_SYMBOL, 0)
@@ -51594,10 +51594,10 @@ class MySQLParser ( MySQLBaseRecognizer ):
             if la_ == 1:
                 self.enterOuterAlt(localctx, 1)
                 self.state = 7186
-                localctx.type = self._input.LT(1)
+                localctx.type_expression = self._input.LT(1)
                 _la = self._input.LA(1)
                 if not(_la==MySQLParser.BIGINT_SYMBOL or _la==MySQLParser.INT_SYMBOL or _la==MySQLParser.MEDIUMINT_SYMBOL or _la==MySQLParser.SMALLINT_SYMBOL or _la==MySQLParser.TINYINT_SYMBOL):
-                    localctx.type = self._errHandler.recoverInline(self)
+                    localctx.type_expression = self._errHandler.recoverInline(self)
                 else:
                     self._errHandler.reportMatch(self)
                     self.consume()
@@ -51626,11 +51626,11 @@ class MySQLParser ( MySQLBaseRecognizer ):
                 token = self._input.LA(1)
                 if token in [MySQLParser.REAL_SYMBOL]:
                     self.state = 7193
-                    localctx.type = self.match(MySQLParser.REAL_SYMBOL)
+                    localctx.type_expression = self.match(MySQLParser.REAL_SYMBOL)
                     pass
                 elif token in [MySQLParser.DOUBLE_SYMBOL]:
                     self.state = 7194
-                    localctx.type = self.match(MySQLParser.DOUBLE_SYMBOL)
+                    localctx.type_expression = self.match(MySQLParser.DOUBLE_SYMBOL)
                     self.state = 7196
                     self._errHandler.sync(self)
                     la_ = self._interp.adaptivePredict(self._input,924,self._ctx)
@@ -51664,10 +51664,10 @@ class MySQLParser ( MySQLBaseRecognizer ):
             elif la_ == 3:
                 self.enterOuterAlt(localctx, 3)
                 self.state = 7206
-                localctx.type = self._input.LT(1)
+                localctx.type_expression = self._input.LT(1)
                 _la = self._input.LA(1)
                 if not(_la==MySQLParser.DECIMAL_SYMBOL or _la==MySQLParser.FIXED_SYMBOL or _la==MySQLParser.FLOAT_SYMBOL or _la==MySQLParser.NUMERIC_SYMBOL):
-                    localctx.type = self._errHandler.recoverInline(self)
+                    localctx.type_expression = self._errHandler.recoverInline(self)
                 else:
                     self._errHandler.reportMatch(self)
                     self.consume()
@@ -51692,7 +51692,7 @@ class MySQLParser ( MySQLBaseRecognizer ):
             elif la_ == 4:
                 self.enterOuterAlt(localctx, 4)
                 self.state = 7213
-                localctx.type = self.match(MySQLParser.BIT_SYMBOL)
+                localctx.type_expression = self.match(MySQLParser.BIT_SYMBOL)
                 self.state = 7215
                 self._errHandler.sync(self)
                 la_ = self._interp.adaptivePredict(self._input,930,self._ctx)
@@ -51706,10 +51706,10 @@ class MySQLParser ( MySQLBaseRecognizer ):
             elif la_ == 5:
                 self.enterOuterAlt(localctx, 5)
                 self.state = 7217
-                localctx.type = self._input.LT(1)
+                localctx.type_expression = self._input.LT(1)
                 _la = self._input.LA(1)
                 if not(_la==MySQLParser.BOOLEAN_SYMBOL or _la==MySQLParser.BOOL_SYMBOL):
-                    localctx.type = self._errHandler.recoverInline(self)
+                    localctx.type_expression = self._errHandler.recoverInline(self)
                 else:
                     self._errHandler.reportMatch(self)
                     self.consume()
@@ -51718,7 +51718,7 @@ class MySQLParser ( MySQLBaseRecognizer ):
             elif la_ == 6:
                 self.enterOuterAlt(localctx, 6)
                 self.state = 7218
-                localctx.type = self.match(MySQLParser.CHAR_SYMBOL)
+                localctx.type_expression = self.match(MySQLParser.CHAR_SYMBOL)
                 self.state = 7220
                 self._errHandler.sync(self)
                 la_ = self._interp.adaptivePredict(self._input,931,self._ctx)
@@ -51762,7 +51762,7 @@ class MySQLParser ( MySQLBaseRecognizer ):
             elif la_ == 8:
                 self.enterOuterAlt(localctx, 8)
                 self.state = 7232
-                localctx.type = self.match(MySQLParser.BINARY_SYMBOL)
+                localctx.type_expression = self.match(MySQLParser.BINARY_SYMBOL)
                 self.state = 7234
                 self._errHandler.sync(self)
                 la_ = self._interp.adaptivePredict(self._input,935,self._ctx)
@@ -51780,13 +51780,13 @@ class MySQLParser ( MySQLBaseRecognizer ):
                 token = self._input.LA(1)
                 if token in [MySQLParser.CHAR_SYMBOL]:
                     self.state = 7236
-                    localctx.type = self.match(MySQLParser.CHAR_SYMBOL)
+                    localctx.type_expression = self.match(MySQLParser.CHAR_SYMBOL)
                     self.state = 7237
                     self.match(MySQLParser.VARYING_SYMBOL)
                     pass
                 elif token in [MySQLParser.VARCHAR_SYMBOL]:
                     self.state = 7238
-                    localctx.type = self.match(MySQLParser.VARCHAR_SYMBOL)
+                    localctx.type_expression = self.match(MySQLParser.VARCHAR_SYMBOL)
                     pass
                 else:
                     raise NoViableAltException(self)
@@ -51810,26 +51810,26 @@ class MySQLParser ( MySQLBaseRecognizer ):
                 la_ = self._interp.adaptivePredict(self._input,938,self._ctx)
                 if la_ == 1:
                     self.state = 7245
-                    localctx.type = self.match(MySQLParser.NATIONAL_SYMBOL)
+                    localctx.type_expression = self.match(MySQLParser.NATIONAL_SYMBOL)
                     self.state = 7246
                     self.match(MySQLParser.VARCHAR_SYMBOL)
                     pass
 
                 elif la_ == 2:
                     self.state = 7247
-                    localctx.type = self.match(MySQLParser.NVARCHAR_SYMBOL)
+                    localctx.type_expression = self.match(MySQLParser.NVARCHAR_SYMBOL)
                     pass
 
                 elif la_ == 3:
                     self.state = 7248
-                    localctx.type = self.match(MySQLParser.NCHAR_SYMBOL)
+                    localctx.type_expression = self.match(MySQLParser.NCHAR_SYMBOL)
                     self.state = 7249
                     self.match(MySQLParser.VARCHAR_SYMBOL)
                     pass
 
                 elif la_ == 4:
                     self.state = 7250
-                    localctx.type = self.match(MySQLParser.NATIONAL_SYMBOL)
+                    localctx.type_expression = self.match(MySQLParser.NATIONAL_SYMBOL)
                     self.state = 7251
                     self.match(MySQLParser.CHAR_SYMBOL)
                     self.state = 7252
@@ -51838,7 +51838,7 @@ class MySQLParser ( MySQLBaseRecognizer ):
 
                 elif la_ == 5:
                     self.state = 7253
-                    localctx.type = self.match(MySQLParser.NCHAR_SYMBOL)
+                    localctx.type_expression = self.match(MySQLParser.NCHAR_SYMBOL)
                     self.state = 7254
                     self.match(MySQLParser.VARYING_SYMBOL)
                     pass
@@ -51859,7 +51859,7 @@ class MySQLParser ( MySQLBaseRecognizer ):
             elif la_ == 11:
                 self.enterOuterAlt(localctx, 11)
                 self.state = 7261
-                localctx.type = self.match(MySQLParser.VARBINARY_SYMBOL)
+                localctx.type_expression = self.match(MySQLParser.VARBINARY_SYMBOL)
                 self.state = 7262
                 self.fieldLength()
                 pass
@@ -51867,7 +51867,7 @@ class MySQLParser ( MySQLBaseRecognizer ):
             elif la_ == 12:
                 self.enterOuterAlt(localctx, 12)
                 self.state = 7263
-                localctx.type = self.match(MySQLParser.YEAR_SYMBOL)
+                localctx.type_expression = self.match(MySQLParser.YEAR_SYMBOL)
                 self.state = 7265
                 self._errHandler.sync(self)
                 la_ = self._interp.adaptivePredict(self._input,940,self._ctx)
@@ -51889,13 +51889,13 @@ class MySQLParser ( MySQLBaseRecognizer ):
             elif la_ == 13:
                 self.enterOuterAlt(localctx, 13)
                 self.state = 7270
-                localctx.type = self.match(MySQLParser.DATE_SYMBOL)
+                localctx.type_expression = self.match(MySQLParser.DATE_SYMBOL)
                 pass
 
             elif la_ == 14:
                 self.enterOuterAlt(localctx, 14)
                 self.state = 7271
-                localctx.type = self.match(MySQLParser.TIME_SYMBOL)
+                localctx.type_expression = self.match(MySQLParser.TIME_SYMBOL)
                 self.state = 7273
                 self._errHandler.sync(self)
                 la_ = self._interp.adaptivePredict(self._input,942,self._ctx)
@@ -51909,7 +51909,7 @@ class MySQLParser ( MySQLBaseRecognizer ):
             elif la_ == 15:
                 self.enterOuterAlt(localctx, 15)
                 self.state = 7275
-                localctx.type = self.match(MySQLParser.TIMESTAMP_SYMBOL)
+                localctx.type_expression = self.match(MySQLParser.TIMESTAMP_SYMBOL)
                 self.state = 7277
                 self._errHandler.sync(self)
                 la_ = self._interp.adaptivePredict(self._input,943,self._ctx)
@@ -51923,7 +51923,7 @@ class MySQLParser ( MySQLBaseRecognizer ):
             elif la_ == 16:
                 self.enterOuterAlt(localctx, 16)
                 self.state = 7279
-                localctx.type = self.match(MySQLParser.DATETIME_SYMBOL)
+                localctx.type_expression = self.match(MySQLParser.DATETIME_SYMBOL)
                 self.state = 7281
                 self._errHandler.sync(self)
                 la_ = self._interp.adaptivePredict(self._input,944,self._ctx)
@@ -51937,13 +51937,13 @@ class MySQLParser ( MySQLBaseRecognizer ):
             elif la_ == 17:
                 self.enterOuterAlt(localctx, 17)
                 self.state = 7283
-                localctx.type = self.match(MySQLParser.TINYBLOB_SYMBOL)
+                localctx.type_expression = self.match(MySQLParser.TINYBLOB_SYMBOL)
                 pass
 
             elif la_ == 18:
                 self.enterOuterAlt(localctx, 18)
                 self.state = 7284
-                localctx.type = self.match(MySQLParser.BLOB_SYMBOL)
+                localctx.type_expression = self.match(MySQLParser.BLOB_SYMBOL)
                 self.state = 7286
                 self._errHandler.sync(self)
                 la_ = self._interp.adaptivePredict(self._input,945,self._ctx)
@@ -51957,10 +51957,10 @@ class MySQLParser ( MySQLBaseRecognizer ):
             elif la_ == 19:
                 self.enterOuterAlt(localctx, 19)
                 self.state = 7288
-                localctx.type = self._input.LT(1)
+                localctx.type_expression = self._input.LT(1)
                 _la = self._input.LA(1)
                 if not(_la==MySQLParser.LONGBLOB_SYMBOL or _la==MySQLParser.MEDIUMBLOB_SYMBOL):
-                    localctx.type = self._errHandler.recoverInline(self)
+                    localctx.type_expression = self._errHandler.recoverInline(self)
                 else:
                     self._errHandler.reportMatch(self)
                     self.consume()
@@ -51969,7 +51969,7 @@ class MySQLParser ( MySQLBaseRecognizer ):
             elif la_ == 20:
                 self.enterOuterAlt(localctx, 20)
                 self.state = 7289
-                localctx.type = self.match(MySQLParser.LONG_SYMBOL)
+                localctx.type_expression = self.match(MySQLParser.LONG_SYMBOL)
                 self.state = 7290
                 self.match(MySQLParser.VARBINARY_SYMBOL)
                 pass
@@ -51977,7 +51977,7 @@ class MySQLParser ( MySQLBaseRecognizer ):
             elif la_ == 21:
                 self.enterOuterAlt(localctx, 21)
                 self.state = 7291
-                localctx.type = self.match(MySQLParser.LONG_SYMBOL)
+                localctx.type_expression = self.match(MySQLParser.LONG_SYMBOL)
                 self.state = 7295
                 self._errHandler.sync(self)
                 la_ = self._interp.adaptivePredict(self._input,946,self._ctx)
@@ -52005,7 +52005,7 @@ class MySQLParser ( MySQLBaseRecognizer ):
             elif la_ == 22:
                 self.enterOuterAlt(localctx, 22)
                 self.state = 7300
-                localctx.type = self.match(MySQLParser.TINYTEXT_SYMBOL)
+                localctx.type_expression = self.match(MySQLParser.TINYTEXT_SYMBOL)
                 self.state = 7302
                 self._errHandler.sync(self)
                 la_ = self._interp.adaptivePredict(self._input,948,self._ctx)
@@ -52019,7 +52019,7 @@ class MySQLParser ( MySQLBaseRecognizer ):
             elif la_ == 23:
                 self.enterOuterAlt(localctx, 23)
                 self.state = 7304
-                localctx.type = self.match(MySQLParser.TEXT_SYMBOL)
+                localctx.type_expression = self.match(MySQLParser.TEXT_SYMBOL)
                 self.state = 7306
                 self._errHandler.sync(self)
                 la_ = self._interp.adaptivePredict(self._input,949,self._ctx)
@@ -52041,7 +52041,7 @@ class MySQLParser ( MySQLBaseRecognizer ):
             elif la_ == 24:
                 self.enterOuterAlt(localctx, 24)
                 self.state = 7311
-                localctx.type = self.match(MySQLParser.MEDIUMTEXT_SYMBOL)
+                localctx.type_expression = self.match(MySQLParser.MEDIUMTEXT_SYMBOL)
                 self.state = 7313
                 self._errHandler.sync(self)
                 la_ = self._interp.adaptivePredict(self._input,951,self._ctx)
@@ -52055,7 +52055,7 @@ class MySQLParser ( MySQLBaseRecognizer ):
             elif la_ == 25:
                 self.enterOuterAlt(localctx, 25)
                 self.state = 7315
-                localctx.type = self.match(MySQLParser.LONGTEXT_SYMBOL)
+                localctx.type_expression = self.match(MySQLParser.LONGTEXT_SYMBOL)
                 self.state = 7317
                 self._errHandler.sync(self)
                 la_ = self._interp.adaptivePredict(self._input,952,self._ctx)
@@ -52069,7 +52069,7 @@ class MySQLParser ( MySQLBaseRecognizer ):
             elif la_ == 26:
                 self.enterOuterAlt(localctx, 26)
                 self.state = 7319
-                localctx.type = self.match(MySQLParser.ENUM_SYMBOL)
+                localctx.type_expression = self.match(MySQLParser.ENUM_SYMBOL)
                 self.state = 7320
                 self.stringList()
                 self.state = 7322
@@ -52085,7 +52085,7 @@ class MySQLParser ( MySQLBaseRecognizer ):
             elif la_ == 27:
                 self.enterOuterAlt(localctx, 27)
                 self.state = 7324
-                localctx.type = self.match(MySQLParser.SET_SYMBOL)
+                localctx.type_expression = self.match(MySQLParser.SET_SYMBOL)
                 self.state = 7325
                 self.stringList()
                 self.state = 7327
@@ -52101,7 +52101,7 @@ class MySQLParser ( MySQLBaseRecognizer ):
             elif la_ == 28:
                 self.enterOuterAlt(localctx, 28)
                 self.state = 7329
-                localctx.type = self.match(MySQLParser.SERIAL_SYMBOL)
+                localctx.type_expression = self.match(MySQLParser.SERIAL_SYMBOL)
                 pass
 
             elif la_ == 29:
@@ -52111,16 +52111,16 @@ class MySQLParser ( MySQLBaseRecognizer ):
                     from antlr4.error.Errors import FailedPredicateException
                     raise FailedPredicateException(self, "serverVersion >= 50708")
                 self.state = 7331
-                localctx.type = self.match(MySQLParser.JSON_SYMBOL)
+                localctx.type_expression = self.match(MySQLParser.JSON_SYMBOL)
                 pass
 
             elif la_ == 30:
                 self.enterOuterAlt(localctx, 30)
                 self.state = 7332
-                localctx.type = self._input.LT(1)
+                localctx.type_expression = self._input.LT(1)
                 _la = self._input.LA(1)
                 if not(_la==MySQLParser.GEOMETRYCOLLECTION_SYMBOL or _la==MySQLParser.GEOMETRY_SYMBOL or _la==MySQLParser.LINESTRING_SYMBOL or ((((_la - 351)) & ~0x3f) == 0 and ((1 << (_la - 351)) & ((1 << (MySQLParser.MULTILINESTRING_SYMBOL - 351)) | (1 << (MySQLParser.MULTIPOINT_SYMBOL - 351)) | (1 << (MySQLParser.MULTIPOLYGON_SYMBOL - 351)) | (1 << (MySQLParser.POINT_SYMBOL - 351)) | (1 << (MySQLParser.POLYGON_SYMBOL - 351)))) != 0)):
-                    localctx.type = self._errHandler.recoverInline(self)
+                    localctx.type_expression = self._errHandler.recoverInline(self)
                 else:
                     self._errHandler.reportMatch(self)
                     self.consume()
@@ -52141,7 +52141,7 @@ class MySQLParser ( MySQLBaseRecognizer ):
         def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
             super().__init__(parent, invokingState)
             self.parser = parser
-            self.type = None # Token
+            self.type_expression = None # Token
 
         def NCHAR_SYMBOL(self):
             return self.getToken(MySQLParser.NCHAR_SYMBOL, 0)
@@ -52177,12 +52177,12 @@ class MySQLParser ( MySQLBaseRecognizer ):
             if token in [MySQLParser.NCHAR_SYMBOL]:
                 self.enterOuterAlt(localctx, 1)
                 self.state = 7335
-                localctx.type = self.match(MySQLParser.NCHAR_SYMBOL)
+                localctx.type_expression = self.match(MySQLParser.NCHAR_SYMBOL)
                 pass
             elif token in [MySQLParser.NATIONAL_SYMBOL]:
                 self.enterOuterAlt(localctx, 2)
                 self.state = 7336
-                localctx.type = self.match(MySQLParser.NATIONAL_SYMBOL)
+                localctx.type_expression = self.match(MySQLParser.NATIONAL_SYMBOL)
                 self.state = 7337
                 self.match(MySQLParser.CHAR_SYMBOL)
                 pass
@@ -52203,7 +52203,7 @@ class MySQLParser ( MySQLBaseRecognizer ):
         def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
             super().__init__(parent, invokingState)
             self.parser = parser
-            self.type = None # Token
+            self.type_expression = None # Token
 
         def REAL_SYMBOL(self):
             return self.getToken(MySQLParser.REAL_SYMBOL, 0)
@@ -52239,12 +52239,12 @@ class MySQLParser ( MySQLBaseRecognizer ):
             if token in [MySQLParser.REAL_SYMBOL]:
                 self.enterOuterAlt(localctx, 1)
                 self.state = 7340
-                localctx.type = self.match(MySQLParser.REAL_SYMBOL)
+                localctx.type_expression = self.match(MySQLParser.REAL_SYMBOL)
                 pass
             elif token in [MySQLParser.DOUBLE_SYMBOL]:
                 self.enterOuterAlt(localctx, 2)
                 self.state = 7341
-                localctx.type = self.match(MySQLParser.DOUBLE_SYMBOL)
+                localctx.type_expression = self.match(MySQLParser.DOUBLE_SYMBOL)
                 self.state = 7343
                 self._errHandler.sync(self)
                 la_ = self._interp.adaptivePredict(self._input,957,self._ctx)
@@ -52415,8 +52415,8 @@ class MySQLParser ( MySQLBaseRecognizer ):
             return self.getTypedRuleContext(MySQLParser.AsciiContext,0)
 
 
-        def unicode(self):
-            return self.getTypedRuleContext(MySQLParser.UnicodeContext,0)
+        def unicode_data(self):
+            return self.getTypedRuleContext(MySQLParser.Unicode_dataContext,0)
 
 
         def BYTE_SYMBOL(self):
@@ -52464,7 +52464,7 @@ class MySQLParser ( MySQLBaseRecognizer ):
             elif la_ == 2:
                 self.enterOuterAlt(localctx, 2)
                 self.state = 7360
-                self.unicode()
+                self.unicode_data()
                 pass
 
             elif la_ == 3:
@@ -52581,7 +52581,7 @@ class MySQLParser ( MySQLBaseRecognizer ):
         return localctx
 
 
-    class UnicodeContext(ParserRuleContext):
+    class Unicode_dataContext(ParserRuleContext):
 
         def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
             super().__init__(parent, invokingState)
@@ -52594,23 +52594,23 @@ class MySQLParser ( MySQLBaseRecognizer ):
             return self.getToken(MySQLParser.BINARY_SYMBOL, 0)
 
         def getRuleIndex(self):
-            return MySQLParser.RULE_unicode
+            return MySQLParser.RULE_unicode_data
 
         def enterRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "enterUnicode" ):
-                listener.enterUnicode(self)
+            if hasattr( listener, "enterUnicode_data" ):
+                listener.enterUnicode_data(self)
 
         def exitRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "exitUnicode" ):
-                listener.exitUnicode(self)
+            if hasattr( listener, "exitUnicode_data" ):
+                listener.exitUnicode_data(self)
 
 
 
 
-    def unicode(self):
+    def unicode_data(self):
 
-        localctx = MySQLParser.UnicodeContext(self, self._ctx, self.state)
-        self.enterRule(localctx, 930, self.RULE_unicode)
+        localctx = MySQLParser.Unicode_dataContext(self, self._ctx, self.state)
+        self.enterRule(localctx, 930, self.RULE_unicode_data)
         try:
             self.state = 7389
             self._errHandler.sync(self)
@@ -53023,7 +53023,7 @@ class MySQLParser ( MySQLBaseRecognizer ):
             super().__init__(parent, invokingState)
             self.parser = parser
             self.option = None # Token
-            self.format = None # Token
+            self.format_expression = None # Token
             self.method = None # Token
 
         def engineRef(self):
@@ -53496,10 +53496,10 @@ class MySQLParser ( MySQLBaseRecognizer ):
 
 
                 self.state = 7507
-                localctx.format = self._input.LT(1)
+                localctx.format_expression = self._input.LT(1)
                 _la = self._input.LA(1)
                 if not(((((_la - 78)) & ~0x3f) == 0 and ((1 << (_la - 78)) & ((1 << (MySQLParser.COMPACT_SYMBOL - 78)) | (1 << (MySQLParser.COMPRESSED_SYMBOL - 78)) | (1 << (MySQLParser.DEFAULT_SYMBOL - 78)))) != 0) or _la==MySQLParser.DYNAMIC_SYMBOL or _la==MySQLParser.FIXED_SYMBOL or _la==MySQLParser.REDUNDANT_SYMBOL):
-                    localctx.format = self._errHandler.recoverInline(self)
+                    localctx.format_expression = self._errHandler.recoverInline(self)
                 else:
                     self._errHandler.reportMatch(self)
                     self.consume()
@@ -55315,7 +55315,7 @@ class MySQLParser ( MySQLBaseRecognizer ):
         def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
             super().__init__(parent, invokingState)
             self.parser = parser
-            self.type = None # Token
+            self.type_expression = None # Token
 
         def functionParameter(self):
             return self.getTypedRuleContext(MySQLParser.FunctionParameterContext,0)
@@ -55356,10 +55356,10 @@ class MySQLParser ( MySQLBaseRecognizer ):
             la_ = self._interp.adaptivePredict(self._input,1038,self._ctx)
             if la_ == 1:
                 self.state = 7791
-                localctx.type = self._input.LT(1)
+                localctx.type_expression = self._input.LT(1)
                 _la = self._input.LA(1)
                 if not(_la==MySQLParser.INOUT_SYMBOL or _la==MySQLParser.IN_SYMBOL or _la==MySQLParser.OUT_SYMBOL):
-                    localctx.type = self._errHandler.recoverInline(self)
+                    localctx.type_expression = self._errHandler.recoverInline(self)
                 else:
                     self._errHandler.reportMatch(self)
                     self.consume()

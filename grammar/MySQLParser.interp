@@ -2082,7 +2082,7 @@ fieldLength
 fieldOptions
 charsetWithOptBinary
 ascii
-unicode
+unicode_data
 wsNumCodepoints
 typeDatetimePrecision
 charsetName
