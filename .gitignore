@@ -1,4 +1,4 @@
-antlr-4.7.2-complete.jar
+*.jar
 MySQLParser.interp
 MySQLParser.py
 MySQLParserListener.py
